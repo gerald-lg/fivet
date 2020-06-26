@@ -25,6 +25,9 @@
 package cl.ucn.disc.pdbp.tdd.model;
 
 import cl.ucn.disc.pdbp.tdd.utils.Validation;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,42 +35,56 @@ import java.util.regex.Pattern;
  * Clase Persona.
  * @author Gerald Lopez
  */
-public class Persona {
+@DatabaseTable(tableName = "Persona")
+public final class Persona {
+
+  /**
+   * Id.
+   */
+  @DatabaseField(generatedId = true)
+  private Long id;
 
   /**
    * El Nombre.
    */
-  private final String nombre;
+  @DatabaseField(canBeNull = false)
+  private String nombre;
   /**
    * El Apellido.
    */
-  private final String apellido;
+  @DatabaseField(canBeNull = false)
+  private String apellido;
   /**
    * El RUT.
    */
-  private final String rut;
+  @DatabaseField(canBeNull = false, index = true)
+  private String rut;
 
   /**
    * Direccion.
    */
-  private final String direccion;
+  @DatabaseField(canBeNull = false)
+  private String direccion;
 
   /**
    * Telefono fijo.
    * Formato: YY XX-XXXX, para cualquier telefono fijo del pais.
    */
-  private final Integer telefonoFijo;
+  @DatabaseField(canBeNull = false)
+  private Integer telefonoFijo;
 
   /**
    * Telefono movil.
    * Formato: 9 XXXX-XXXX.
    */
-  private final Integer telefonoMovil;
+  @DatabaseField(canBeNull = false)
+  private Integer telefonoMovil;
 
   /**
    * Email.
    */
-  private final String email;
+  @DatabaseField(canBeNull = false)
+  private String email;
 
   /**
    * Patrón de un telefono fijo valido.
@@ -81,6 +98,13 @@ public class Persona {
    * Patrón de un correo electronico valido.
    */
   private final Pattern emailValido = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$");
+
+  /**
+   * Constructor vacio.
+   */
+  Persona() {
+    //Nada aquí
+  }
 
   /**
    * Constructor de la clase.
@@ -207,5 +231,13 @@ public class Persona {
 
   public String getEmail() {
     return this.email;
+  }
+
+  /**
+   * Obtiene el id autogenerado.
+   * @return id
+   */
+  public Long getId() {
+    return id;
   }
 }
