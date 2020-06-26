@@ -27,7 +27,6 @@ package cl.ucn.disc.pdbp.tdd.model;
 import cl.ucn.disc.pdbp.tdd.utils.Validation;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,7 +56,7 @@ public final class Persona {
   /**
    * El RUT.
    */
-  @DatabaseField(canBeNull = false, index = true)
+  @DatabaseField(canBeNull = false, unique = true, index = true)
   private String rut;
 
   /**
