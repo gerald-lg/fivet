@@ -64,6 +64,6 @@ dependencies {
     implementation 'com.j256.ormlite:ormlite-jdbc:5.1'
 
     // Database driver
-    implementation 'com.h2database:h2.1.4.200'
+    implementation 'com.h2database:h2:1.4.200'
 
 }
