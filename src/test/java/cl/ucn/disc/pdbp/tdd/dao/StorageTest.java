@@ -24,6 +24,7 @@
 
 package cl.ucn.disc.pdbp.tdd.dao;
 
+import checkers.units.quals.C;
 import cl.ucn.disc.pdbp.tdd.model.Persona;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -52,13 +53,16 @@ public final class StorageTest {
   private static final Logger log = LoggerFactory.getLogger(StorageTest.class);
 
   /**
+   * Base de datos a usar (Memoria RAM)
+   */
+
+  private final String databaseUrl = "jdbc:h2:mem:fivet_db";
+
+  /**
    * Testing de ORMLite + H2(DB)
    */
   @Test
   public void testDataBase() throws SQLException {
-
-    // Base de datos a usar (Memoria RAM)
-    String databaseUrl = "jdbc:h2:mem:fivet_db";
 
     // Conexion
     try (ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
@@ -92,6 +96,60 @@ public final class StorageTest {
         log.error("Error", e);
     }
 
+
+  }
+
+  /**
+   * Testing the repository.
+   */
+  @Test
+  public void testRepository() {
+
+    try (ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
+
+      //Crear tabla.
+      TableUtils.createTableIfNotExists(connectionSource,Persona.class);
+
+      // Test conexion nula
+      Assertions.assertThrows(RuntimeException.class, () -> new RepositoryOrmLite<>(null,Persona.class));
+
+      //Repositorio
+      Repository<Persona,Long> theRepo = new RepositoryOrmLite<>(connectionSource,Persona.class);
+
+      //Repositorio vacio.
+      {
+        List<Persona> personas = theRepo.findAll();
+        Assertions.assertEquals(0, personas.size(), "Size != 0");
+      }
+
+      //Insertar una persona en el repositorio v1.
+      {
+        Persona persona = new Persona("Gerald", "Lopez", "152532873", "Falsa 123",
+                55221234,912345678, "gerald.lopez@gmail.com");
+
+        if (!theRepo.create(persona)){
+          Assertions.fail("No se inserto la persona!");
+        }
+      }
+
+      //Insertar una persona en el repositorio v2.
+      {
+        Persona persona = new Persona("Gerald", "Lopez", "152532873", "Falsa 123",
+                55221234,912345678, "gerald.lopez@gmail.com");
+
+        Assertions.assertThrows(RuntimeException.class, () -> theRepo.create(persona));
+      }
+
+      //Repositorio despues de haber realizado una insercion.
+      {
+        List<Persona> personas = theRepo.findAll();
+        Assertions.assertEquals(1, personas.size(), "Size != 1");
+      }
+
+
+    } catch (IOException | SQLException e){
+        throw new RuntimeException(e);
+    }
 
   }
 
