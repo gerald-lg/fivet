@@ -24,6 +24,9 @@
 
 package cl.ucn.disc.pdbp.tdd.model;
 
+import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import java.time.ZonedDateTime;
 
 /**
@@ -31,47 +34,69 @@ import java.time.ZonedDateTime;
  *
  * @author Gerald Lopez
  */
-public class Ficha {
+@DatabaseTable(tableName = "Ficha")
+public final class Ficha {
+
+  /**
+   * Id de la Ficha.
+   */
+  @DatabaseField(generatedId = true)
+  private Long id;
 
   /**
    * Numero de ficha del paciente.
    */
-  private final long numero;
+  @DatabaseField(unique = true, canBeNull = false)
+  private Long numero;
 
   /**
    * Nombre del paciente.
    */
-  private final String nombre;
+  @DatabaseField(canBeNull = false)
+  private String nombre;
 
   /**
    * Especie del paciente, ej: canino.
    */
-  private final String especie;
+  @DatabaseField(canBeNull = false)
+  private String especie;
 
   /**
    * Fecha de nacimiento del paciente.
    */
-  private final ZonedDateTime fechaNacimiento;
+  @DatabaseField(canBeNull = false, persisterClass = ZonedDateTimeType.class)
+  private ZonedDateTime fechaNacimiento;
 
   /**
    * Raza del paciente.
    */
-  private final String raza;
+  @DatabaseField
+  private String raza;
 
   /**
    * Sexo.
    */
-  private final Sexo sexo;
+  @DatabaseField(canBeNull = false)
+  private Sexo sexo;
 
   /**
    * Color del paciente, ej: rojo cobrizo.
    */
-  private final String color;
+  @DatabaseField(canBeNull = false)
+  private String color;
 
   /**
    * Tipo.
    */
-  private final Tipo tipo;
+  @DatabaseField(canBeNull = false)
+  private Tipo tipo;
+
+  /**
+   * Constructor vacio.
+   */
+  Ficha() {
+    //nada aqui.
+  }
 
   /**
    * Constructor de Ficha.
@@ -84,7 +109,9 @@ public class Ficha {
    * @param color valido a usar.
    * @param tipo de paciente.
    */
-  public Ficha(long numero, String nombre, String especie, ZonedDateTime fechaNacimiento, String raza, Sexo sexo, String color, Tipo tipo) {
+  public Ficha(long numero, String nombre, String especie, ZonedDateTime fechaNacimiento, String raza, Sexo sexo,
+               String color, Tipo tipo) {
+
     this.numero = numero;
     this.nombre = nombre;
     this.especie = especie;
@@ -96,11 +123,19 @@ public class Ficha {
   }
 
   /**
+   * Obtiene el id asignado.
+   * @return id
+   */
+  public Long getId() {
+    return this.id;
+  }
+
+  /**
    * Obtiene el numero de ficha del paciente.
    * @return numero de ficha veterinaria.
    */
   public long getNumero() {
-    return numero;
+    return this.numero;
   }
 
   /**
@@ -108,7 +143,7 @@ public class Ficha {
    * @return nombre.
    */
   public String getNombre() {
-    return nombre;
+    return this.nombre;
   }
 
   /**
@@ -116,7 +151,7 @@ public class Ficha {
    * @return especie.
    */
   public String getEspecie() {
-    return especie;
+    return this.especie;
   }
 
   /**
@@ -124,7 +159,7 @@ public class Ficha {
    * @return fecha de nacimiento del paciente.
    */
   public ZonedDateTime getFechaNacimiento() {
-    return fechaNacimiento;
+    return this.fechaNacimiento;
   }
 
   /**
@@ -132,7 +167,7 @@ public class Ficha {
    * @return raza del paciente
    */
   public String getRaza() {
-    return raza;
+    return this.raza;
   }
 
   /**
@@ -140,7 +175,7 @@ public class Ficha {
    * @return Sexo
    */
   public Sexo getSexo() {
-    return sexo;
+    return this.sexo;
   }
 
   /**
@@ -148,7 +183,7 @@ public class Ficha {
    * @return color
    */
   public String getColor() {
-    return color;
+    return this.color;
   }
 
   /**
@@ -156,6 +191,7 @@ public class Ficha {
    * @return Tipo
    */
   public Tipo getTipo() {
-    return tipo;
+    return this.tipo;
   }
+
 }
