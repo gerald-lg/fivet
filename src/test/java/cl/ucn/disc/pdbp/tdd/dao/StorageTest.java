@@ -25,12 +25,17 @@
 package cl.ucn.disc.pdbp.tdd.dao;
 
 import checkers.units.quals.C;
+import cl.ucn.disc.pdbp.tdd.model.Ficha;
 import cl.ucn.disc.pdbp.tdd.model.Persona;
+import cl.ucn.disc.pdbp.tdd.model.Sexo;
+import cl.ucn.disc.pdbp.tdd.model.Tipo;
+import cl.ucn.disc.pdbp.tdd.utils.Entity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import javafx.scene.control.Tab;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -38,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
@@ -100,7 +106,7 @@ public final class StorageTest {
   }
 
   /**
-   * Testing the repository.
+   * Test repositorio de Persona.
    */
   @Test
   public void testRepository() {
@@ -153,5 +159,54 @@ public final class StorageTest {
 
   }
 
+  @Test
+  public void testRepoFicha() {
+
+    try (ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
+
+      //Create table
+      TableUtils.createTableIfNotExists(connectionSource, Persona.class);
+      TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
+
+      Repository<Ficha, Long> theRepoFicha = new RepositoryOrmLite<>(connectionSource,Ficha.class);
+
+      {
+        //Instancia del duenio
+        Persona duenio = new Persona("Gerald", "Lopez", "152532873", "Falsa 123",
+                55221234,912345678, "gerald.lopez@gmail.com");
+
+        //Crear una persona en el repositorio.
+        if (! new RepositoryOrmLite<Persona,Long>(connectionSource, Persona.class).create(duenio)) {
+          Assertions.fail("No se pudo insertar la persona!");
+        }
+
+        //Instanciar una ficha.
+        Ficha ficha = new Ficha(123,"Harry","Felino", ZonedDateTime.now(),"American shorthair",
+                Sexo.MACHO,"Amarillo", Tipo.EXTERNO,duenio);
+
+        //Crear una ficha en el repositorio.
+        if(!theRepoFicha.create(ficha)){
+          Assertions.fail("No se pudo crear la ficha!");
+        }
+      }
+
+      {
+        //Obtener una ficha y revisar si sus atributos son != null
+        Ficha ficha = theRepoFicha.findById(1L);
+        //Los atributos de ficha no pueden ser null.
+        Assertions.assertNotNull(ficha,"Ficha was null");
+        Assertions.assertNotNull(ficha.getDuenio(),"Duenio de Ficha was ");
+        Assertions.assertNotNull(ficha.getDuenio().getRut(),"Rut del Duenio de Ficha was null");
+        Assertions.assertNotNull(ficha.getFechaNacimiento(),"Fecha nacimiento was null");
+
+        //Imprimir los atributos de la ficha
+        log.debug("Ficha: {}.", Entity.toString(ficha));
+      }
+
+    } catch (SQLException | IOException exception) {
+      throw new RuntimeException(exception);
+    }
+
+  }
 
 }
