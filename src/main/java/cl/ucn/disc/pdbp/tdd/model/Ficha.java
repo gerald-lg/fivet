@@ -92,6 +92,12 @@ public final class Ficha {
   private Tipo tipo;
 
   /**
+   * Duenio of paciente.
+   */
+  @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
+  private Persona duenio;
+
+  /**
    * Constructor vacio.
    */
   Ficha() {
@@ -108,9 +114,10 @@ public final class Ficha {
    * @param sexo del paciente a ingresar.
    * @param color valido a usar.
    * @param tipo de paciente.
+   * @param duenio de paciente.
    */
   public Ficha(long numero, String nombre, String especie, ZonedDateTime fechaNacimiento, String raza, Sexo sexo,
-               String color, Tipo tipo) {
+               String color, Tipo tipo, Persona duenio) {
 
     this.numero = numero;
     this.nombre = nombre;
@@ -120,6 +127,7 @@ public final class Ficha {
     this.sexo = sexo;
     this.color = color;
     this.tipo = tipo;
+    this.duenio = duenio;
   }
 
   /**
@@ -194,4 +202,11 @@ public final class Ficha {
     return this.tipo;
   }
 
+  /**
+   * Obtiene el duenio del paciente.
+   * @return duenio
+   */
+  public Persona getDuenio() {
+    return this.duenio;
+  }
 }
