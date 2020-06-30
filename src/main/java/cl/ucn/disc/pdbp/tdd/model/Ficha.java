@@ -25,9 +25,14 @@
 package cl.ucn.disc.pdbp.tdd.model;
 
 import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Clase Ficha Veterinaria.
@@ -92,10 +97,16 @@ public final class Ficha {
   private Tipo tipo;
 
   /**
-   * Duenio of paciente.
+   * Duenio de paciente.
    */
   @DatabaseField(foreign = true, canBeNull = false, foreignAutoRefresh = true)
   private Persona duenio;
+
+  /**
+   * Controles del paciente.
+   */
+  @ForeignCollectionField(eager = true)
+  private ForeignCollection<Control> controles;
 
   /**
    * Constructor vacio.
@@ -208,5 +219,13 @@ public final class Ficha {
    */
   public Persona getDuenio() {
     return this.duenio;
+  }
+
+  /**
+   * Obtiene los controles de una ficha.
+   * @return controles
+   */
+  public List<Control> getControles() {
+    return Collections.unmodifiableList(new ArrayList<>(controles));
   }
 }

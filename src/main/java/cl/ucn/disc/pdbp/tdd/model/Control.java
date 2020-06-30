@@ -38,6 +38,12 @@ import java.time.ZonedDateTime;
 public class Control {
 
   /**
+   * Id de control
+   */
+  @DatabaseField(generatedId = true)
+  private Long id;
+
+  /**
    * Fecha de control.
    */
   @DatabaseField(persisterClass = ZonedDateTimeType.class, canBeNull = false)
@@ -84,6 +90,12 @@ public class Control {
   private Persona veterinario;
 
   /**
+   * Ficha.
+   */
+  @DatabaseField(canBeNull =false, foreign = true, foreignAutoRefresh = true)
+  private Ficha ficha;
+
+  /**
    * Constructor vacio.
    */
   Control() {
@@ -99,9 +111,10 @@ public class Control {
    * @param altura del paciente que le corresponde el control
    * @param diagnostico del paciente.
    * @param veterinario asociado.
+   * @param ficha asociada al control.
    */
   public Control(ZonedDateTime fecha, ZonedDateTime proximoControl, Float temperatura, Float peso, Float altura,
-                 String diagnostico, Persona veterinario) {
+                 String diagnostico, Persona veterinario, Ficha ficha) {
 
     if (fecha.equals(null)) {
       throw new NullPointerException("Este campo no puede estar vacio");
@@ -113,7 +126,7 @@ public class Control {
 
     this.fecha = fecha;
 
-    if (!proximoControl.isAfter(ZonedDateTime.now())) {
+    if (proximoControl != null && proximoControl.isBefore(ZonedDateTime.now())) {
       throw new RuntimeException("Fecha de proximo control invalida.");
     }
 
@@ -154,6 +167,12 @@ public class Control {
     }
 
     this.veterinario = veterinario;
+
+    if (ficha.equals(null)) {
+      throw new NullPointerException("El control debe estar asociado a una ficha!");
+    }
+    this.ficha = ficha;
+
   }
 
   public ZonedDateTime getFecha() {
