@@ -27,6 +27,7 @@ package cl.ucn.disc.pdbp.tdd.dao;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.List;
@@ -86,6 +87,32 @@ public final class RepositoryOrmLite<T, K> implements Repository<T, K> {
       throw new RuntimeException(throwables);
     }
 
+  }
+
+  /**
+   * Obtiene un List filtrado por "key".
+   *
+   * @param key   que se busca
+   * @param value que se busca
+   * @return Lista de T filtrada por key
+   */
+  @Override
+  public List<T> findAll(String key, Object value) {
+    try {
+      return theDao.queryForEq(key,value);
+    } catch (SQLException throwables) {
+      throw new RuntimeException(throwables);
+    }
+  }
+
+  /**
+   * Permite construir consultas al repositorio de forma generica.
+   *
+   * @return la {@link QueryBuilder}
+   */
+  @Override
+  public QueryBuilder<T, K> getQuery() {
+    return theDao.queryBuilder();
   }
 
   /**

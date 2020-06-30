@@ -24,6 +24,8 @@
 
 package cl.ucn.disc.pdbp.tdd.dao;
 
+import com.j256.ormlite.stmt.QueryBuilder;
+
 import java.util.List;
 
 /**
@@ -47,6 +49,20 @@ public interface Repository<T, K> {
    * @return T con la id.
    */
   T findById(K id);
+
+  /**
+   * Obtiene un List filtrado por "key".
+   * @param key que se busca
+   * @param value que se busca
+   * @return Lista de T filtrada por key
+   */
+  List<T> findAll(String key, Object value);
+
+  /**
+   * Permite construir consultas al repositorio de forma generica.
+   * @return la {@link QueryBuilder}
+   */
+  QueryBuilder<T, K> getQuery();
 
   /**
    * Crea un T en el repositorio.
