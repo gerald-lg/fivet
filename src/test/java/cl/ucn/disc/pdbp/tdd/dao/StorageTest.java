@@ -24,11 +24,9 @@
 
 package cl.ucn.disc.pdbp.tdd.dao;
 
+import checkers.units.quals.A;
 import checkers.units.quals.C;
-import cl.ucn.disc.pdbp.tdd.model.Ficha;
-import cl.ucn.disc.pdbp.tdd.model.Persona;
-import cl.ucn.disc.pdbp.tdd.model.Sexo;
-import cl.ucn.disc.pdbp.tdd.model.Tipo;
+import cl.ucn.disc.pdbp.tdd.model.*;
 import cl.ucn.disc.pdbp.tdd.utils.Entity;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -167,6 +165,7 @@ public final class StorageTest {
       //Create table
       TableUtils.createTableIfNotExists(connectionSource, Persona.class);
       TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
+      TableUtils.createTableIfNotExists(connectionSource, Control.class);
 
       Repository<Ficha, Long> theRepoFicha = new RepositoryOrmLite<>(connectionSource,Ficha.class);
 
@@ -206,6 +205,70 @@ public final class StorageTest {
     } catch (SQLException | IOException exception) {
       throw new RuntimeException(exception);
     }
+
+  }
+
+  /**
+   * Test Repositorio Control, y relacionamiento con la clase ficha.
+   */
+  @Test
+  public void testRepositoryControl() {
+
+      try (ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
+
+        //Creacion de tablas en DB
+        TableUtils.createTableIfNotExists(connectionSource, Persona.class);
+        TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
+        TableUtils.createTableIfNotExists(connectionSource, Control.class);
+
+        {
+          //Instancia del duenio
+          Persona duenio = new Persona("Gerald", "Lopez", "152532873", "Falsa 123",
+                  55221234,912345678, "gerald.lopez@gmail.com");
+
+          if (!new RepositoryOrmLite<Persona, Long>(connectionSource, Persona.class).create(duenio)) {
+            Assertions.fail("No se pudo insertar la persona!");
+          }
+
+          //Repositorio de Fichas
+          Repository<Ficha, Long> repoFicha = new RepositoryOrmLite<>(connectionSource, Ficha.class);
+
+          //Instancia de una ficha.
+          Ficha ficha = new Ficha(123,"Harry","Felino", ZonedDateTime.now(),"American shorthair",
+                  Sexo.MACHO,"Amarillo", Tipo.EXTERNO,duenio);
+
+          if (!repoFicha.create(ficha)){
+            Assertions.fail("No se pudo ingresar la ficha!");
+          }
+
+          //Repositorio Control
+          Repository<Control, Long> repoControl = new RepositoryOrmLite<>(connectionSource, Control.class);
+
+          Persona vet = new Persona("Mauricio", "Fuentes", "206806052", "Fake 1321",
+                  55225656,987654321,"mfuentes@gmail.com");
+
+          if (!new RepositoryOrmLite<Persona, Long>(connectionSource, Persona.class).create(vet)) {
+            Assertions.fail("No se pudo insertar!");
+          }
+
+          Control control = new Control(ZonedDateTime.now(),null, 36.2F,10F,30F,
+                  "Sobrepeso",vet, repoFicha.findById(1L));
+
+          if(!repoControl.create(control)){
+            Assertions.fail("No se pudo insertar el control!");
+          }
+
+          Assertions.assertEquals(1, repoControl.findAll().size(), "!=1?!");
+
+          log.debug("Control {}", Entity.toString(control));
+
+
+        }
+
+      } catch (SQLException | IOException exception) {
+        throw new RuntimeException(exception);
+      }
+
 
   }
 
