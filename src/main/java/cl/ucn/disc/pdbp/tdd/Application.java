@@ -24,13 +24,12 @@
 
 package cl.ucn.disc.pdbp.tdd;
 
-import cl.ucn.disc.pdbp.tdd.model.Persona;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.javalin.Javalin;
+import io.javalin.apibuilder.ApiBuilder;
 import io.javalin.core.util.RouteOverviewPlugin;
 import io.javalin.plugin.json.JavalinJson;
-import java.time.ZonedDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +79,56 @@ public final class Application {
 
       //Muestra todas las rutas.
       config.registerPlugin(new RouteOverviewPlugin("/routes"));
+
+      //Define las rutas
+    }).routes(() -> {
+      //Version
+      ApiBuilder.path("v1", () -> {
+
+        // /fichas
+        ApiBuilder.path("fichas", () -> {
+          //Get /fichas
+          ApiBuilder.get(ApiRestEndpoints::getAllFichas);
+
+          //Post /fichas
+          ApiBuilder.post(ApiRestEndpoints::createFicha);
+
+          //Get /fichas/find/{query}
+          ApiBuilder.path("find/:query", () -> {
+            ApiBuilder.get(ApiRestEndpoints::findFichas);
+          });
+
+          // Get /fichas/{numeroFicha}
+          ApiBuilder.path(":numeroFicha", () -> {
+
+            // Get /fichas/{numeroFicha}/controles
+            ApiBuilder.path("controles", () -> {
+              ApiBuilder.get(ApiRestEndpoints::getControles);
+
+              ApiBuilder.post(ApiRestEndpoints::createControl);
+            });
+            //Get /fichas/{numeroFicha}/persona
+            ApiBuilder.path("duenio", () -> {
+              ApiBuilder.get(ApiRestEndpoints::getDuenioOfFicha);
+            });
+
+          });
+
+        });
+
+        // /personas
+        ApiBuilder.path("personas", () -> {
+          //Get /persona
+          ApiBuilder.get(ApiRestEndpoints::getAllPersonas);
+
+          //Post /persona
+          ApiBuilder.post(ApiRestEndpoints::createPersona);
+
+          //TODO: obtener la lista de personas paginada.
+        });
+
+      });
+
     }).start(7000);
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -87,26 +136,6 @@ public final class Application {
       javalin.stop();
       log.debug("The end.");
     }));
-
-    //Peticion a la raiz del servidor, se obtiene la fecha.
-    javalin.get("/", ctx -> {
-      ctx.result("The Date: " + ZonedDateTime.now());
-    });
-
-    javalin.get("/personas/", ctx -> {
-
-      String nombre = "Andrea";
-      String apellido = "Contreras";
-      String rutOk = "152532873";
-      String direccion = "Falsa 123";
-      Integer telefonoFijo = 55221234;
-      Integer telefonoMovil = 912345678;
-      String email = "andrea.contreras@gmail.com";
-
-      Persona persona = new Persona(nombre, apellido, rutOk, direccion, telefonoFijo, telefonoMovil, email);
-
-      ctx.json(persona);
-    });
 
   }
 
