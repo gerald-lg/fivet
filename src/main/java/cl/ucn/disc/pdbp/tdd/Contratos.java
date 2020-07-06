@@ -24,6 +24,7 @@
 
 package cl.ucn.disc.pdbp.tdd;
 
+import cl.ucn.disc.pdbp.tdd.model.Control;
 import cl.ucn.disc.pdbp.tdd.model.Ficha;
 import cl.ucn.disc.pdbp.tdd.model.Persona;
 import java.util.List;
@@ -56,10 +57,42 @@ public interface Contratos {
   List<Ficha> buscarFicha(String query);
 
   /**
+   * Registra un control asociado a una {@link Ficha}.
+   * @param control nuevo a registrar.
+   * @return {@link Control} en backend.
+   */
+  Control registrarControl(Control control);
+
+  /**
    * Obtiene una lista de todas las fichas.
    * @return {@link List} of {@link Ficha}
    */
   List<Ficha> getAllFichas();
 
+  /**
+   * Obtiene el id de una persona.
+   * @param id a buscar.
+   * @return id of {@link Persona}
+   */
+  Persona getId(Long id);
 
+  /**
+   * Obtiene una lista de todas las personas.
+   * @return {@link List} of {@link Persona}
+   */
+  List<Persona> getAllPersonas();
+
+  /**
+   * Obtiene un listado de los controles.
+   * @param numeroFicha de los controles.
+   * @return {@link List} de {@link Control}
+   */
+  List<Control> getControles(Integer numeroFicha);
+
+  /**
+   * Obtiene el duenio de un paciente por su numero de ficha.
+   * @param numeroFicha buscada.
+   * @return duenio de la Ficha.
+   */
+  Persona getDuenioOfFicha(Integer numeroFicha);
 }

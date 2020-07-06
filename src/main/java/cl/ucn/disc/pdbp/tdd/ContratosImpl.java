@@ -183,6 +183,23 @@ public class ContratosImpl implements Contratos {
   }
 
   /**
+   * Registra un control asociado a una {@link Ficha}.
+   *
+   * @param control nuevo a registrar.
+   * @return {@link Control} en backend.
+   */
+  @Override
+  public Control registrarControl(Control control) {
+
+    if (control == null) {
+      throw  new NullPointerException("Control invalido!");
+    }
+    this.repoControl.create(control);
+    return this.repoControl.findById(control.getId());
+
+  }
+
+  /**
    * Obtiene una lista de todas las fichas.
    *
    * @return {@link List} of {@link Ficha}
@@ -190,5 +207,64 @@ public class ContratosImpl implements Contratos {
   @Override
   public List<Ficha> getAllFichas() {
     return repoFicha.findAll();
+  }
+
+  /**
+   * Obtiene el id de una persona.
+   *
+   * @param id a buscar.
+   * @return id of {@link Persona}
+   */
+  @Override
+  public Persona getId(Long id) {
+
+    return repoPersona.findById(id);
+
+  }
+
+  /**
+   * Obtiene una lista de todas las personas.
+   *
+   * @return {@link List} of {@link Persona}
+   */
+  @Override
+  public List<Persona> getAllPersonas() {
+
+    return repoPersona.findAll();
+  }
+
+  /**
+   * Obtiene un listado de los controles.
+   * @param numeroFicha de los controles.
+   * @return {@link List} de {@link Control}
+   */
+  @Override
+  public List<Control> getControles(Integer numeroFicha) {
+
+    Ficha fichaBuscada = this.repoFicha.findAll("numero", numeroFicha).get(0);
+
+    if (fichaBuscada.equals(null)) {
+      return null;
+    }
+    return fichaBuscada.getControles();
+  }
+
+
+  /**
+   * Obtiene el duenio de un paciente por su numero de ficha.
+   *
+   * @param numeroFicha buscada.
+   * @return duenio de la Ficha.
+   */
+  @Override
+  public Persona getDuenioOfFicha(Integer numeroFicha) {
+
+    Ficha fichaBuscada = this.repoFicha.findAll("numero", numeroFicha).get(0);
+
+    if (fichaBuscada.equals(null)) {
+      return null;
+    }
+
+    return fichaBuscada.getDuenio();
   }
 }
