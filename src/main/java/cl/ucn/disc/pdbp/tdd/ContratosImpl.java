@@ -181,4 +181,14 @@ public class ContratosImpl implements Contratos {
 
     return fichas;
   }
+
+  /**
+   * Obtiene una lista de todas las fichas.
+   *
+   * @return {@link List} of {@link Ficha}
+   */
+  @Override
+  public List<Ficha> getAllFichas() {
+    return repoFicha.findAll();
+  }
 }
