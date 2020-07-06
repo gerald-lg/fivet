@@ -202,4 +202,12 @@ public class Control {
   public Persona getVeterinario() {
     return this.veterinario;
   }
+
+  public Long getId() {
+    return this.id;
+  }
+
+  public Ficha getFicha() {
+    return this.ficha;
+  }
 }
