@@ -25,9 +25,14 @@
 package cl.ucn.disc.pdbp.tdd.model;
 
 import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Clase Control.
@@ -38,7 +43,7 @@ import java.time.ZonedDateTime;
 public class Control {
 
   /**
-   * Id de control
+   * Id de control.
    */
   @DatabaseField(generatedId = true)
   private Long id;
@@ -92,8 +97,11 @@ public class Control {
   /**
    * Ficha.
    */
-  @DatabaseField(canBeNull =false, foreign = true, foreignAutoRefresh = true)
+  @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
   private Ficha ficha;
+
+  @ForeignCollectionField(eager = true)
+  private ForeignCollection<Examen> examenes;
 
   /**
    * Constructor vacio.
@@ -113,8 +121,8 @@ public class Control {
    * @param veterinario asociado.
    * @param ficha asociada al control.
    */
-  public Control(ZonedDateTime fecha, ZonedDateTime proximoControl, Float temperatura, Float peso, Float altura,
-                 String diagnostico, Persona veterinario, Ficha ficha) {
+  public Control(ZonedDateTime fecha, ZonedDateTime proximoControl, Float temperatura, Float peso,
+                 Float altura, String diagnostico, Persona veterinario, Ficha ficha) {
 
     if (fecha.equals(null)) {
       throw new NullPointerException("Este campo no puede estar vacio");
@@ -203,11 +211,27 @@ public class Control {
     return this.veterinario;
   }
 
+  /**
+   * Obtiene el id autogenerado.
+   * @return id.
+   */
   public Long getId() {
     return this.id;
   }
 
+  /**
+   * Obtiene la ficha asociada al control.
+   * @return Ficha.
+   */
   public Ficha getFicha() {
     return this.ficha;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public List<Examen> getExamenes() {
+    return Collections.unmodifiableList(new ArrayList<>(examenes));
   }
 }
