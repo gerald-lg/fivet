@@ -127,8 +127,8 @@ public final class Ficha {
    * @param tipo de paciente.
    * @param duenio de paciente.
    */
-  public Ficha(long numero, String nombre, String especie, ZonedDateTime fechaNacimiento, String raza, Sexo sexo,
-               String color, Tipo tipo, Persona duenio) {
+  public Ficha(long numero, String nombre, String especie, ZonedDateTime fechaNacimiento,
+               String raza, Sexo sexo, String color, Tipo tipo, Persona duenio) {
 
     this.numero = numero;
     this.nombre = nombre;

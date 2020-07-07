@@ -119,7 +119,8 @@ public class ApiRestEndpoints {
     Persona duenio = CONTRATOS.getId(duenioId);
 
     //Crea la ficha y la inserta en la BD.
-    Ficha ficha = new Ficha(numero, nombrePaciente, especie, fechaNacimiento, raza, sexo, color, tipo, duenio);
+    Ficha ficha = new Ficha(numero, nombrePaciente, especie, fechaNacimiento, raza, sexo, color,
+            tipo, duenio);
     CONTRATOS.registrarPaciente(ficha);
 
   }
@@ -152,7 +153,8 @@ public class ApiRestEndpoints {
     Integer telefonoMovil = Integer.parseInt(ctx.formParam("telefonoMovil"));
     String email = ctx.pathParam("email");
 
-    Persona persona = new Persona(nombre, apellido, rut, direccion, telefonoFijo, telefonoMovil, email);
+    Persona persona = new Persona(nombre, apellido, rut, direccion, telefonoFijo, telefonoMovil,
+            email);
     CONTRATOS.registrarPersona(persona);
     ctx.json(persona);
 
@@ -194,7 +196,8 @@ public class ApiRestEndpoints {
     Long numeroFicha = Long.valueOf(ctx.pathParam("numeroFicha"));
     Ficha ficha = CONTRATOS.buscarFicha(numeroFicha.toString()).get(0);
 
-    Control control = new Control(fecha, proximoControl, temperatura, peso, altura, diagnostico, veterinario, ficha);
+    Control control = new Control(fecha, proximoControl, temperatura, peso, altura, diagnostico,
+            veterinario, ficha);
     CONTRATOS.registrarControl(control);
     ctx.json(control);
 

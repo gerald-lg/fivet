@@ -25,7 +25,6 @@
 package cl.ucn.disc.pdbp.tdd.dao;
 
 import com.j256.ormlite.stmt.QueryBuilder;
-
 import java.util.List;
 
 /**

@@ -96,7 +96,8 @@ public final class Persona {
   /**
    * Patrón de un correo electronico valido.
    */
-  private final Pattern emailValido = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,4})$");
+  private final Pattern emailValido = Pattern.compile("^[_a-z0-9-]+(.[_a-z0-9-]+)*@[a-z0-9-]+"
+          + "(.[a-z0-9-]+)*(.[a-z]{2,4})$");
 
   /**
    * Constructor vacio.

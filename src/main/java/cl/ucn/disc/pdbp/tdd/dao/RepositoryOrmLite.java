@@ -99,7 +99,7 @@ public final class RepositoryOrmLite<T, K> implements Repository<T, K> {
   @Override
   public List<T> findAll(String key, Object value) {
     try {
-      return theDao.queryForEq(key,value);
+      return theDao.queryForEq(key, value);
     } catch (SQLException throwables) {
       throw new RuntimeException(throwables);
     }
