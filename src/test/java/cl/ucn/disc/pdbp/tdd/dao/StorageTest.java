@@ -220,6 +220,7 @@ public final class StorageTest {
         TableUtils.createTableIfNotExists(connectionSource, Persona.class);
         TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
         TableUtils.createTableIfNotExists(connectionSource, Control.class);
+        TableUtils.createTableIfNotExists(connectionSource, Examen.class);
 
         {
           //Instancia del duenio
@@ -268,6 +269,77 @@ public final class StorageTest {
       } catch (SQLException | IOException exception) {
         throw new RuntimeException(exception);
       }
+
+
+  }
+
+  /**
+   * Test del repositorio de un Examen.
+   */
+  @Test
+  public void repoExamenTest() {
+
+    try (ConnectionSource connectionSource = new JdbcConnectionSource(databaseUrl)) {
+
+      //Creacion de tablas en DB
+      TableUtils.createTableIfNotExists(connectionSource, Persona.class);
+      TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
+      TableUtils.createTableIfNotExists(connectionSource, Control.class);
+      TableUtils.createTableIfNotExists(connectionSource, Examen.class);
+
+      {
+        //Instancia del duenio
+        Persona duenio = new Persona("Gerald", "Lopez", "152532873", "Falsa 123",
+                55221234,912345678, "gerald.lopez@gmail.com");
+
+        if (!new RepositoryOrmLite<Persona, Long>(connectionSource, Persona.class).create(duenio)) {
+          Assertions.fail("No se pudo insertar la persona!");
+        }
+
+        //Repositorio de Fichas
+        Repository<Ficha, Long> repoFicha = new RepositoryOrmLite<>(connectionSource, Ficha.class);
+
+        //Instancia de una ficha.
+        Ficha ficha = new Ficha(123,"Harry","Felino", ZonedDateTime.now(),"American shorthair",
+                Sexo.MACHO,"Amarillo", Tipo.EXTERNO,duenio);
+
+        if (!repoFicha.create(ficha)){
+          Assertions.fail("No se pudo ingresar la ficha!");
+        }
+
+        //Repositorio Control
+        Repository<Control, Long> repoControl = new RepositoryOrmLite<>(connectionSource, Control.class);
+
+        Persona vet = new Persona("Mauricio", "Fuentes", "206806052", "Fake 1321",
+                55225656,987654321,"mfuentes@gmail.com");
+
+        if (!new RepositoryOrmLite<Persona, Long>(connectionSource, Persona.class).create(vet)) {
+          Assertions.fail("No se pudo insertar!");
+        }
+
+        Control control = new Control(ZonedDateTime.now(),null, 36.2F,10F,30F,
+                "Sobrepeso",vet, repoFicha.findById(1L));
+
+        if(!repoControl.create(control)){
+          Assertions.fail("No se pudo insertar el control!");
+        }
+
+        //Repositorio Examen
+        Repository<Examen, Long> repoExamen = new RepositoryOrmLite<>(connectionSource, Examen.class);
+
+        Examen examen = new Examen("Cardiologia", ZonedDateTime.now(), repoControl.findById(1L));
+
+        if(!repoExamen.create(examen)) {
+          Assertions.fail("No se pudo insertar el examen !");
+        }
+
+        log.debug("Examen {}", Entity.toString(examen));
+
+      }
+
+    } catch (SQLException | IOException exception) {
+      throw new RuntimeException(exception);
+    }
 
 
   }
