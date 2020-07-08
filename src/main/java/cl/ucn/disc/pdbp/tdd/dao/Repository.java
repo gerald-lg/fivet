@@ -43,19 +43,19 @@ public interface Repository<T, K> {
   List<T> findAll();
 
   /**
-   * Obtiene un T a traves de su identificador.
-   * @param id a buscar
-   * @return T con la id.
-   */
-  T findById(K id);
-
-  /**
    * Obtiene un List filtrado por "key".
    * @param key que se busca
    * @param value que se busca
    * @return Lista de T filtrada por key
    */
   List<T> findAll(String key, Object value);
+
+  /**
+   * Obtiene un T a traves de su identificador.
+   * @param id a buscar
+   * @return T con la id.
+   */
+  T findById(K id);
 
   /**
    * Permite construir consultas al repositorio de forma generica.
