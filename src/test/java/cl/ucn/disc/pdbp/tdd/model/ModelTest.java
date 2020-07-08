@@ -135,4 +135,28 @@ public final class ModelTest {
 
     }
 
+    /**
+     * Test formato de la foto del paciente.
+     */
+    @Test
+    public void testFormatoFoto(){
+
+        Assertions.assertFalse(Validation.formatoFoto("foto.gif"));
+        Assertions.assertFalse(Validation.formatoFoto(".g"));
+        Assertions.assertFalse(Validation.formatoFoto(".123"));
+        Assertions.assertFalse(Validation.formatoFoto("gato1.123"));
+        Assertions.assertFalse(Validation.formatoFoto("gato1.jpgjpg"));
+        Assertions.assertFalse(Validation.formatoFoto("askarNacimiento.PNG"));
+
+        Assertions.assertTrue(Validation.formatoFoto("firulais.jpeg"));
+        Assertions.assertTrue(Validation.formatoFoto("firulais.jpg"));
+        Assertions.assertTrue(Validation.formatoFoto("firulais.png"));
+        Assertions.assertTrue(Validation.formatoFoto("askar_1.png"));
+        Assertions.assertTrue(Validation.formatoFoto("Askar1.png"));
+        Assertions.assertTrue(Validation.formatoFoto("askarNacimiento.png"));
+
+
+
+    }
+
 }
