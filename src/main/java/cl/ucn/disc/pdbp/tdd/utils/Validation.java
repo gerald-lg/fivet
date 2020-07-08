@@ -40,6 +40,11 @@ public class Validation {
   private static final Pattern pattern = Pattern.compile("^[0-9]+[0-9kK]{1}$");
 
   /**
+   * Patron que sigue el formato de foto.
+   */
+  private static final Pattern formato = Pattern.compile("^[_aA-zZ0-9]+.(jpg|jpeg|png){1}$");
+
+  /**
    * Valida que el rut ingresado sea correcto.
    * @param rut valido
    */
@@ -76,5 +81,25 @@ public class Validation {
 
     return (s > 0) ? String.valueOf(s - 1) : "k";
 
+  }
+
+  /**
+   * Comprueba si el formato de la foto.
+   * @param fotoUrl a analizar
+   * @return true si el formato es correcto.
+   */
+  public static boolean formatoFoto(String fotoUrl){
+
+    if (fotoUrl == null){
+      return false;
+    }
+
+    Matcher match = formato.matcher(fotoUrl);
+
+    if(match.matches() == false ){
+      return false;
+    }
+
+    return true;
   }
 }
