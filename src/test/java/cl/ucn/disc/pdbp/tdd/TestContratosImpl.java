@@ -24,17 +24,11 @@
 
 package cl.ucn.disc.pdbp.tdd;
 
-import checkers.units.quals.A;
-import cl.ucn.disc.pdbp.tdd.model.Ficha;
-import cl.ucn.disc.pdbp.tdd.model.Persona;
-import cl.ucn.disc.pdbp.tdd.model.Sexo;
-import cl.ucn.disc.pdbp.tdd.model.Tipo;
-import cl.ucn.disc.pdbp.tdd.utils.Entity;
+import cl.ucn.disc.pdbp.tdd.model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -183,5 +177,42 @@ public class TestContratosImpl {
     }
 
   }
+
+  @Test
+  public void testRegistrarControl() {
+
+    Persona duenio = new Persona("Brenda", "Lopez","191468694","Fake 653", 55218877,
+            963293074,"blopez@hotmail.com");
+
+    Persona vet = new Persona("Mauricio", "Fuentes", "206806052", "Fake 1321",
+            55225656,987654321,"mfuentes@gmail.com");
+
+    //Registro de las personas en BD.
+    contratos.registrarPersona(duenio);
+    contratos.registrarPersona(vet);
+
+    //Instancia de una ficha de paciente.
+    Ficha ficha = new Ficha(404L,"Askar","Canino", ZonedDateTime.now(),"Pastor belga",
+            Sexo.MACHO,"Negro", Tipo.EXTERNO, duenio);
+    //Registro del paciente en BD.
+    contratos.registrarPaciente(ficha);
+
+    //Datos del control
+    ZonedDateTime fecha = ZonedDateTime.now();
+    ZonedDateTime proximoControl = null;
+    Float temperatura = 36.2F;
+    Float peso = 10F;
+    Float altura = 30F;
+    String diagnostico = "Obesidad";
+
+    Control control = new Control(fecha, proximoControl, temperatura, peso, altura, diagnostico, vet, ficha);
+
+    Control controldb = contratos.registrarControl(control);
+
+
+    Assertions.assertEquals(1, ficha.getControles().size());
+
+  }
+
 
 }
