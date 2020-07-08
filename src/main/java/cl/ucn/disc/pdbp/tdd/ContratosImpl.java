@@ -27,6 +27,7 @@ package cl.ucn.disc.pdbp.tdd;
 import cl.ucn.disc.pdbp.tdd.dao.Repository;
 import cl.ucn.disc.pdbp.tdd.dao.RepositoryOrmLite;
 import cl.ucn.disc.pdbp.tdd.model.Control;
+import cl.ucn.disc.pdbp.tdd.model.Examen;
 import cl.ucn.disc.pdbp.tdd.model.Ficha;
 import cl.ucn.disc.pdbp.tdd.model.Persona;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -63,6 +64,11 @@ public class ContratosImpl implements Contratos {
   private Repository<Control, Long> repoControl;
 
   /**
+   * {@link Repository} de {@link Examen}.
+   */
+  private Repository<Examen, Long> repoExamen;
+
+  /**
    * {@link Repository} de {@link Ficha}.
    */
   private Repository<Ficha, Long> repoFicha;
@@ -88,11 +94,12 @@ public class ContratosImpl implements Contratos {
 
       //Creacion de tablas.
       TableUtils.createTableIfNotExists(connectionSource, Control.class);
+      TableUtils.createTableIfNotExists(connectionSource, Examen.class);
       TableUtils.createTableIfNotExists(connectionSource, Ficha.class);
       TableUtils.createTableIfNotExists(connectionSource, Persona. class);
 
-
       this.repoControl = new RepositoryOrmLite<>(connectionSource, Control.class);
+      this.repoExamen = new RepositoryOrmLite<>(connectionSource, Examen.class);
       this.repoFicha = new RepositoryOrmLite<>(connectionSource, Ficha.class);
       this.repoPersona = new RepositoryOrmLite<>(connectionSource, Persona.class);
 
@@ -194,9 +201,36 @@ public class ContratosImpl implements Contratos {
     if (control == null) {
       throw  new NullPointerException("Control invalido!");
     }
+
     this.repoControl.create(control);
+
+    control.getFicha().createControl(control);
+    //Cuando se hace la relacion con el control, se debe actualizar la ficha en el repositorio.
+    this.repoFicha.update(control.getFicha());
+
     return this.repoControl.findById(control.getId());
 
+  }
+
+  /**
+   * Registra un examen asociado a un {@link Control}.
+   *
+   * @param examen nuevo
+   * @return {@link Examen} en backend.
+   */
+  @Override
+  public Examen registrarExamen(Examen examen) {
+
+    if (examen == null) {
+      throw  new NullPointerException("Examen invalido");
+    }
+    this.repoExamen.create(examen);
+
+    examen.getControl().createExamen(examen);
+
+    this.repoControl.update(examen.getControl());
+
+    return this.repoExamen.findById(examen.getId());
   }
 
   /**
@@ -239,14 +273,14 @@ public class ContratosImpl implements Contratos {
    * @return {@link List} de {@link Control}
    */
   @Override
-  public List<Control> getControles(Integer numeroFicha) {
+  public List<Control> getControles(Long numeroFicha) {
 
     Ficha fichaBuscada = this.repoFicha.findAll("numero", numeroFicha).get(0);
 
     if (fichaBuscada.equals(null)) {
       return null;
     }
-    return fichaBuscada.getControles();
+    return new ArrayList<>(fichaBuscada.getControles());
   }
 
 

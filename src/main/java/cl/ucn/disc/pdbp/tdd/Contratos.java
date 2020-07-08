@@ -25,6 +25,7 @@
 package cl.ucn.disc.pdbp.tdd;
 
 import cl.ucn.disc.pdbp.tdd.model.Control;
+import cl.ucn.disc.pdbp.tdd.model.Examen;
 import cl.ucn.disc.pdbp.tdd.model.Ficha;
 import cl.ucn.disc.pdbp.tdd.model.Persona;
 import java.util.List;
@@ -64,6 +65,13 @@ public interface Contratos {
   Control registrarControl(Control control);
 
   /**
+   * Registra un examen asociado a un {@link Control}.
+   * @param examen nuevo
+   * @return {@link Examen} en backend.
+   */
+  Examen registrarExamen(Examen examen);
+
+  /**
    * Obtiene una lista de todas las fichas.
    * @return {@link List} of {@link Ficha}
    */
@@ -87,7 +95,7 @@ public interface Contratos {
    * @param numeroFicha de los controles.
    * @return {@link List} de {@link Control}
    */
-  List<Control> getControles(Integer numeroFicha);
+  List<Control> getControles(Long numeroFicha);
 
   /**
    * Obtiene el duenio de un paciente por su numero de ficha.
