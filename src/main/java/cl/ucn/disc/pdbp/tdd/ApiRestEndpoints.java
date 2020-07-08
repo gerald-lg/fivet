@@ -31,6 +31,7 @@ import cl.ucn.disc.pdbp.tdd.model.Sexo;
 import cl.ucn.disc.pdbp.tdd.model.Tipo;
 import io.javalin.http.Context;
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +93,7 @@ public class ApiRestEndpoints {
 
     //Atributos de la Ficha
 
-    Integer numero = Integer.parseInt(ctx.formParam("numeroFicha"));
+    Long numero = Long.valueOf(ctx.formParam("numeroFicha"));
     String nombrePaciente = ctx.formParam("nombrePaciente");
     String especie = ctx.formParam("especie");
     String raza = ctx.formParam("raza");
@@ -166,7 +167,7 @@ public class ApiRestEndpoints {
    */
   public static void getControles(Context ctx) {
 
-    Integer numeroFicha = Integer.parseInt(ctx.formParam("numeroFicha"));
+    Long numeroFicha = Long.valueOf(ctx.formParam("numeroFicha"));
     List<Control> controles = CONTRATOS.getControles(numeroFicha);
     ctx.json(controles);
 
@@ -198,7 +199,7 @@ public class ApiRestEndpoints {
 
     Control control = new Control(fecha, proximoControl, temperatura, peso, altura, diagnostico,
             veterinario, ficha);
-    CONTRATOS.registrarControl(control);
+
     ctx.json(control);
 
 
