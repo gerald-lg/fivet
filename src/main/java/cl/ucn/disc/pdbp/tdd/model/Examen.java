@@ -24,6 +24,7 @@
 
 package cl.ucn.disc.pdbp.tdd.model;
 
+import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.time.ZonedDateTime;
@@ -50,7 +51,7 @@ public final class Examen {
   /**
    * Fecha del Examen.
    */
-  @DatabaseField(canBeNull = false)
+  @DatabaseField(canBeNull = false, persisterClass = ZonedDateTimeType.class)
   private ZonedDateTime fecha;
 
   /**
@@ -73,8 +74,25 @@ public final class Examen {
    * @param control asociado del examen.
    */
   public Examen(String nombre, ZonedDateTime fecha, Control control) {
+
+    if (nombre == null) {
+      throw new NullPointerException("No puede ser null !");
+    }
+    if (nombre.length() < 2) {
+      throw new RuntimeException("Nombre de examen invalido!");
+    }
     this.nombre = nombre;
+
+
+    if (fecha.equals(null)) {
+      throw new NullPointerException("No puede ser null !");
+    }
+    //TODO:Consultar sobre la validacion de la fecha.
     this.fecha = fecha;
+
+    if (control.equals(null)) {
+      throw new NullPointerException("No puede ser null !");
+    }
     this.control = control;
   }
 
