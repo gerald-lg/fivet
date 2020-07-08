@@ -25,6 +25,7 @@
 package cl.ucn.disc.pdbp.tdd.model;
 
 import cl.ucn.disc.pdbp.tdd.dao.ZonedDateTimeType;
+import cl.ucn.disc.pdbp.tdd.utils.Validation;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -108,6 +109,11 @@ public final class Ficha {
    */
   @ForeignCollectionField(eager = true, columnName = "controles")
   private ForeignCollection<Control> controles;
+
+  /**
+   * Url de foto del paciente.
+   */
+  private String nombreFoto;
 
   /**
    * Constructor vacio.
@@ -236,5 +242,18 @@ public final class Ficha {
    */
   public void createControl(Control control) {
     this.controles.add(control);
+  }
+
+  public String getNombreFoto() {
+    return this.nombreFoto;
+  }
+
+  public void addFoto(String urlFoto){
+
+    if(!Validation.formatoFoto(urlFoto)){
+      throw new RuntimeException("Foto invalida");
+    }
+    this.nombreFoto = urlFoto;
+
   }
 }
