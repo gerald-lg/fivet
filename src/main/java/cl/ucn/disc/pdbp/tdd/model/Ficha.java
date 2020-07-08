@@ -31,8 +31,9 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+
 
 /**
  * Clase Ficha Veterinaria.
@@ -105,7 +106,7 @@ public final class Ficha {
   /**
    * Controles del paciente.
    */
-  @ForeignCollectionField(eager = true)
+  @ForeignCollectionField(eager = true, columnName = "controles")
   private ForeignCollection<Control> controles;
 
   /**
@@ -153,7 +154,7 @@ public final class Ficha {
    * Obtiene el numero de ficha del paciente.
    * @return numero de ficha veterinaria.
    */
-  public long getNumero() {
+  public Long getNumero() {
     return this.numero;
   }
 
@@ -225,7 +226,15 @@ public final class Ficha {
    * Obtiene los controles de una ficha.
    * @return controles
    */
-  public List<Control> getControles() {
+  public Collection<Control> getControles() {
     return Collections.unmodifiableList(new ArrayList<>(controles));
+  }
+
+  /**
+   * Agrega un control a la coleccion asociado a la ficha.
+   * @param control a insertar.
+   */
+  public void createControl(Control control) {
+    this.controles.add(control);
   }
 }

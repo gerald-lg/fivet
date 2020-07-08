@@ -183,30 +183,58 @@ public class Control {
 
   }
 
+  /**
+   * Obtiene la fecha del control.
+   * @return fecha.
+   */
   public ZonedDateTime getFecha() {
     return this.fecha;
   }
 
+  /**
+   * Obtiene la fecha del proximo control.
+   * @return proximo control.
+   */
   public ZonedDateTime getProximoControl() {
     return this.proximoControl;
   }
 
+  /**
+   * Obtiene la temperatura del paciente.
+   * @return temperatura
+   */
   public Float getTemperatura() {
     return this.temperatura;
   }
 
+  /**
+   * Obtiene el peso del paciente.
+   * @return peso
+   */
   public Float getPeso() {
     return this.peso;
   }
 
+  /**
+   * Obtiene la altura del paciente.
+   * @return altura.
+   */
   public Float getAltura() {
     return this.altura;
   }
 
+  /**
+   * Obtiene el diagnostico.
+   * @return diagnostico
+   */
   public String getDiagnostico() {
     return this.diagnostico;
   }
 
+  /**
+   * Obtiene el veterinario asociado al control.
+   * @return veterinario.
+   */
   public Persona getVeterinario() {
     return this.veterinario;
   }
@@ -228,10 +256,18 @@ public class Control {
   }
 
   /**
-   *
-   * @return
+   * Obtiene los examenes de un control.
+   * @return {@link List} de {@link Examen}.
    */
   public List<Examen> getExamenes() {
     return Collections.unmodifiableList(new ArrayList<>(examenes));
   }
+
+  /**
+   * Agrega un nuevo examen.
+   */
+  public void createExamen(Examen examen) {
+    this.examenes.add(examen);
+  }
+
 }
