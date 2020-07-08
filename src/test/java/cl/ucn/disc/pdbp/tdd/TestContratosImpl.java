@@ -24,6 +24,7 @@
 
 package cl.ucn.disc.pdbp.tdd;
 
+import checkers.units.quals.A;
 import cl.ucn.disc.pdbp.tdd.model.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -178,6 +179,9 @@ public class TestContratosImpl {
 
   }
 
+  /**
+   * Testing registrar un control.
+   */
   @Test
   public void testRegistrarControl() {
 
@@ -209,10 +213,54 @@ public class TestContratosImpl {
 
     Control controldb = contratos.registrarControl(control);
 
-
+    Assertions.assertEquals(ficha.getId(), control.getFicha().getId());
     Assertions.assertEquals(1, ficha.getControles().size());
 
   }
+
+  /**
+   * Testing registrar un examen.
+   */
+  @Test
+  public void testRegistrarExamen() {
+
+    Persona duenio = new Persona("Brenda", "Lopez","191468694","Fake 653", 55218877,
+            963293074,"blopez@hotmail.com");
+
+    Persona vet = new Persona("Mauricio", "Fuentes", "206806052", "Fake 1321",
+            55225656,987654321,"mfuentes@gmail.com");
+
+    //Registro de las personas en BD.
+    contratos.registrarPersona(duenio);
+    contratos.registrarPersona(vet);
+
+    //Instancia de una ficha de paciente.
+    Ficha ficha = new Ficha(404L,"Askar","Canino", ZonedDateTime.now(),"Pastor belga",
+            Sexo.MACHO,"Negro", Tipo.EXTERNO, duenio);
+    //Registro del paciente en BD.
+    contratos.registrarPaciente(ficha);
+
+    //Instancia de un control
+    Control control = new Control(ZonedDateTime.now(), ZonedDateTime.now().plusWeeks(2), 36.2F, 10F, 30F,
+            "Obesidad", vet, ficha);
+
+    contratos.registrarControl(control);
+
+    //Datos del examen
+
+    String nombreExamen = "Cardiologia";
+    ZonedDateTime fechaExamen = ZonedDateTime.now().plusWeeks(1);
+
+    Examen examen = new Examen(nombreExamen, fechaExamen, control);
+
+    contratos.registrarExamen(examen);
+
+
+    Assertions.assertEquals(control.getId(), examen.getControl().getId());
+    Assertions.assertEquals(1, control.getExamenes().size());
+
+  }
+
 
 
 }
